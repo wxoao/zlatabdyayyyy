@@ -22,13 +22,22 @@
             --current-glow: var(--stranger-red);
         }
 
-        body {
-            margin: 0; padding: 0; background-color: #000; color: white;
-            font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh;
-            -webkit-tap-highlight-color: transparent; user-select: none;
-            padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
-            transition: filter 0.2s;
-        }
+body {
+    margin: 0; padding: 0; background-color: #000; color: white;
+    font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* --- БЛОК ЗАПРЕТА ВЫДЕЛЕНИЯ --- */
+    -webkit-touch-callout: none; /* Отключает меню при долгом нажатии на iOS */
+    -webkit-user-select: none;   /* Для Safari и Chrome на iOS */
+    -moz-user-select: none;      /* Для Firefox */
+    -ms-user-select: none;       /* Для Internet Explorer/Edge */
+    user-select: none;           /* Стандарт */
+    /* ----------------------------- */
+
+    padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+    transition: filter 0.2s;
+}
 
         ::-webkit-scrollbar { display: none; }
 
