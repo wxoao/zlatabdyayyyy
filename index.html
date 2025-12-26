@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Stranger Things App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -25,11 +25,12 @@
             margin: 0; padding: 0; background-color: #000; color: white;
             font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
             padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
-            transition: filter 0.2s;
+            touch-action: manipulation;
         }
 
+        body.modal-open { overflow: hidden; position: fixed; width: 100%; height: 100%; }
         ::-webkit-scrollbar { display: none; }
 
         /* CANVAS */
@@ -105,7 +106,7 @@
         /* SECTION TITLES */
         .section-title { font-family: 'Inter', sans-serif; font-size: 19px; font-weight: 700; margin-bottom: 15px; margin-top: 30px; color: #fff; }
         
-        /* TRAILER PLAYER STYLES */
+        /* TRAILER PLAYER */
         .player-wrapper {
             position: relative; width: 100%; 
             background-color: #000;
@@ -151,7 +152,7 @@
         .db-month { font-size: 9px; font-weight: 700; color: #888; text-transform: uppercase; }
         .available-text { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 12px; color: #0f0; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); letter-spacing: 1px; text-transform: uppercase; }
 
-        /* EPISODES PAGE (LIST) */
+        /* EPISODES PAGE */
         #episodes-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 50; flex-direction: column; padding: 20px 16px; box-sizing: border-box; overflow-y: auto; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         .custom-back-btn { background: transparent; border: none; color: #888; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; margin-bottom: 10px; padding: 5px 0; width: fit-content; }
@@ -167,35 +168,81 @@
         .ep-title { font-size: 14px; color: white; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
         .ep-dur { font-size: 11px; color: #666; }
 
-        /* CINEMA MODE (FULLSCREEN PLAYER) */
+        /* --- CINEMA MODE (HYBRID PLAYER) --- */
         #cinema-mode {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 200; flex-direction: column; justify-content: center;
-            animation: fadeIn 0.3s ease;
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            background: #000; 
+            z-index: 2000;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .cinema-close-btn {
-            position: absolute; top: 15px; left: 15px; z-index: 210;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid #333;
-            color: #fff; padding: 8px 12px; border-radius: 8px; cursor: pointer;
-            backdrop-filter: blur(5px); font-weight: bold; font-size: 12px;
+            position: absolute; 
+            top: max(20px, env(safe-area-inset-top)); 
+            right: 20px; 
+            z-index: 2010;
+            background: rgba(20, 20, 20, 0.8); 
+            border: 1px solid var(--stranger-red);
+            color: #fff; 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            cursor: pointer;
+            backdrop-filter: blur(5px); 
+            font-weight: bold; 
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
         }
+
         .cinema-player-box {
-            width: 100%; aspect-ratio: 16/9; background: #000; position: relative;
+            width: 100%; 
+            height: 100%; 
+            background: #000; 
+            position: relative;
+            z-index: 2005;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        #cinema-frame { width: 100%; height: 100%; border: none; }
+
+        /* ВИДЕО ТЕГ (ДЛЯ ПРЯМЫХ MP4) */
+        video#cinema-video {
+            width: 100%; height: 100%; object-fit: contain; background: black; z-index: 2005; display: none;
+        }
+        
+        /* IFRAME (ДЛЯ PIXELDRAIN) */
+        iframe#cinema-iframe {
+            width: 100%; height: 100%; border: none; background: black; z-index: 2005; display: none;
+        }
+        
         .cinema-controls {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px; color: white; margin-top: 10px;
+            position: absolute; bottom: 30px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px 0; 
+            color: white; 
+            z-index: 2010;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
         }
-        .cinema-info { text-align: center; flex-grow: 1; }
-        .cinema-title { font-size: 16px; font-weight: bold; color: var(--current-glow); margin-bottom: 5px; }
+        .cinema-info { text-align: center; flex-grow: 1; padding: 0 10px; }
+        .cinema-title { font-size: 16px; font-weight: bold; color: var(--current-glow); margin-bottom: 5px; line-height: 1.3; }
         .cinema-subtitle { font-size: 12px; color: #888; }
+        
+        .cinema-controls .nav-btn { width: 40px; height: 40px; font-size: 20px; }
 
         /* SUBSCRIPTION MODAL */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 300; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center;
             backdrop-filter: blur(5px);
         }
         .modal-box {
@@ -259,12 +306,17 @@
     <audio id="bg-music" src="https://orangefreesounds.com/wp-content/uploads/2023/02/Creepy-grandfather-clock-sound.mp3" loop></audio>
     <audio id="buzz-sound" src="https://www.soundjay.com/mechanical/sounds/electric-buzz-01.mp3"></audio>
 
-    <!-- CINEMA MODE (NEW WINDOW FOR EPISODES) -->
+    <!-- CINEMA MODE (HYBRID PLAYER) -->
     <div id="cinema-mode">
-        <button class="cinema-close-btn" onclick="closeCinema()">✕ ЗАКРЫТЬ</button>
+        <div class="cinema-close-btn" onclick="closeCinema()">✕ ЗАКРЫТЬ</div>
+        
         <div class="cinema-player-box">
-            <iframe id="cinema-frame" allowfullscreen="true" allow="autoplay; encrypted-media"></iframe>
+            <!-- ДВА ВАРИАНТА ПЛЕЕРА: ВИДЕО И IFRAME -->
+            <video id="cinema-video" controls playsinline controlsList="nodownload"></video>
+            <iframe id="cinema-iframe" allowfullscreen allow="autoplay; fullscreen"></iframe>
         </div>
+        
+        <!-- Меню навигации оставил, оно будет поверх -->
         <div class="cinema-controls">
             <button class="nav-btn" onclick="changeCinemaEpisode(-1)">‹</button>
             <div class="cinema-info">
@@ -378,7 +430,6 @@
         tg.expand(); tg.setHeaderColor('#000000'); tg.setBackgroundColor('#000000');
         function vibration() { if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); }
 
-        // --- 1. СПИСОК КАНАЛОВ (СМЕШАННЫЙ) ---
         const opChannels = [
             "strangerthingsfiveseason",       
             "https://t.me/+azpZxcHVlM41OTYy", 
@@ -392,16 +443,18 @@
 
         const config = {
             requiredChannel: currentAutoChannel,
-            
-            // Ссылки на серии
             epLinks: {
                 1: { url: "https://t.me/strangerthingsfiveseason/17", title: "Глава 1: Ползание" },
                 2: { url: "https://t.me/strangerthingsfiveseason/19", title: "Глава 2: Исчезновение" },
                 3: { url: "https://t.me/strangerthingsfiveseason/20", title: "Глава 3: Ловушка" },
                 4: { url: "https://t.me/strangerthingsfiveseason/21", title: "Глава 4: Колдун" },
-                5: { url: "https://t.me/strangerthingsfiveseason/39", title: "Глава 5" }, 
-                6: { url: "https://t.me/strangerthingsfiveseason/42", title: "Глава 6" }, 
-                7: { url: "https://t.me/strangerthingsfiveseason/43", title: "Глава 7" }, 
+                
+                // ТВОИ ССЫЛКИ PIXELDRAIN (ID ФАЙЛОВ)
+                // Я настроил так, что достаточно ID или полной ссылки
+                5: { url: "https://pixeldrain.com/u/NHFBNcGA", title: "Глава 5: Шоковая терапия" },
+                6: { url: "https://pixeldrain.com/u/hKeNyrXj", title: "Глава 6: Побег из Камазотц" },
+                7: { url: "https://pixeldrain.com/u/AbCP8EHM", title: "Глава 7: Мост" },
+                
                 8: { url: "", title: "Глава 8" }
             },
             trailerLinks: [
@@ -581,17 +634,16 @@
             loadTrailer(currentIdx);
         }
 
-        // --- CINEMA MODE (EPISODES) ---
+        // --- CINEMA MODE (HYBRID PLAYER LOGIC) ---
         let currentCinemaEp = 1;
         const cinemaOverlay = document.getElementById('cinema-mode');
-        const cinemaFrame = document.getElementById('cinema-frame');
+        const cinemaVideo = document.getElementById('cinema-video');
+        const cinemaIframe = document.getElementById('cinema-iframe');
         const cinemaTitle = document.getElementById('cinema-title');
 
         function openCinema(epId, force = false) {
-            // 1. Проверяем подписку (если force == false)
             if (!force && !checkSubRequirement(epId)) return;
 
-            // 2. Открываем окно
             currentCinemaEp = epId;
             const epData = config.epLinks[epId];
             if (!epData || !epData.url) {
@@ -600,45 +652,68 @@
             }
 
             vibration();
-            // Превращаем ссылку поста в Embed
-            const embedUrl = epData.url + "?embed=1&mode=tme";
-            
             cinemaTitle.innerText = epData.title;
-            cinemaFrame.src = embedUrl;
+            
+            // ПРОВЕРКА: PIXELDRAIN или ОБЫЧНЫЙ ФАЙЛ
+            if (epData.url.includes("pixeldrain")) {
+                // Включаем режим IFRAME
+                let id = epData.url.split('/').pop();
+                // Чистим ID от лишних параметров
+                if(id.includes('?')) id = id.split('?')[0];
+                
+                // Формируем ссылку на Embed
+                const embedUrl = `https://pixeldrain.com/u/${id}?embed`;
+                
+                cinemaVideo.style.display = 'none';
+                cinemaVideo.pause();
+                cinemaIframe.style.display = 'block';
+                cinemaIframe.src = embedUrl;
+                
+            } else if (epData.url.includes("t.me")) {
+                // Если ссылка на телеграм пост
+                tg.openTelegramLink(epData.url);
+                return;
+            } else {
+                // Включаем режим VIDEO (для других прямых MP4)
+                cinemaIframe.style.display = 'none';
+                cinemaIframe.src = "";
+                cinemaVideo.style.display = 'block';
+                cinemaVideo.src = epData.url;
+                cinemaVideo.play().catch(e=>{});
+            }
+            
             cinemaOverlay.style.display = 'flex';
-            
-            // Закрываем меню серий, если оно открыто
+            document.body.classList.add('modal-open'); 
             closePart();
-            
-            // Если играет музыка, глушим
             if(!isMuted) bgAudio.pause();
         }
 
         function closeCinema() {
             vibration();
             cinemaOverlay.style.display = 'none';
-            cinemaFrame.src = '';
+            document.body.classList.remove('modal-open');
+            
+            // Стопаем всё
+            cinemaVideo.pause();
+            cinemaVideo.src = '';
+            cinemaIframe.src = '';
+            
             if(!isMuted) bgAudio.play();
         }
 
         function changeCinemaEpisode(dir) {
             vibration();
             let nextEp = currentCinemaEp + dir;
-            // Ограничиваем только вышедшими (1-4)
-            if (nextEp < 1) nextEp = 4;
-            if (nextEp > 4) nextEp = 1;
-            
-            // Переключаем (проверка подписки БУДЕТ СНОВА, так как force=false по умолчанию)
+            if (nextEp < 1) nextEp = 8;
+            if (nextEp > 8) nextEp = 1;
             openCinema(nextEp); 
         }
 
-        // --- ПОДПИСКА (ВСЕГДА ПРОСИТЬ) ---
+        // --- ПОДПИСКА ---
         let pendingEpId = null;
 
         function checkSubRequirement(epId) {
-            // Запоминаем, какую серию хотели открыть
             pendingEpId = epId;
-            
             const chan = config.requiredChannel;
             const nameEl = document.getElementById('modal-chan-name');
             const subBtn = document.querySelector('.btn-sub');
@@ -652,7 +727,7 @@
             }
             
             document.getElementById('sub-modal').style.display = 'flex';
-            return false; // Блокируем открытие
+            return false; // Блокируем
         }
 
         function doSubscribe() { 
@@ -668,8 +743,6 @@
         function checkSubscription() {
             vibration(); 
             document.getElementById('sub-modal').style.display = 'none';
-            
-            // Если мы запомнили серию, открываем её принудительно (force=true)
             if (pendingEpId) {
                 openCinema(pendingEpId, true);
                 pendingEpId = null;
@@ -715,13 +788,11 @@
                 const card = document.createElement('div'); card.className = 'episode-card';
                 const globalEpId = data.offset + index + 1;
                 
-                // CLICK HANDLER: Calls openCinema directly
                 card.onclick = () => { 
                     vibration(); 
                     if (now < dates[partId]) {
                         alert('Этот эпизод еще не вышел!'); 
                     } else {
-                        // ОТКРЫВАЕМ НОВОЕ ОКНО С ПЛЕЕРОМ
                         openCinema(globalEpId);
                     }
                 };
