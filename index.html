@@ -11,8 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Benguiat+ITC&family=Inter:wght@400;500;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
 
     <style>
+        /* --- ГЛОБАЛЬНЫЙ ФИКС РАЗМЕРОВ (САМОЕ ВАЖНОЕ) --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         :root {
             --stranger-red: #ff0909;
+            --stranger-glow: #ff1a1a;
             --upside-blue: #0044ff;
             --bg-black: #050505;
             --card-glass: rgba(20, 20, 20, 0.75);
@@ -89,17 +95,19 @@
 
         /* PAGES */
         .page-container {
-            display: none; /* Скрыто по умолчанию */
-            padding: 10px 20px 20px 20px; max-width: 600px; margin: 0 auto;
+            display: none; 
+            padding: 10px 16px 20px 16px; /* Чуть уменьшил padding для мобильных */
+            max-width: 600px; margin: 0 auto;
             position: relative; z-index: 10; opacity: 0; transition: opacity 0.2s ease;
+            width: 100%;
         }
         .page-container.active-page { display: block; opacity: 1; }
 
         /* HEADER */
-        .app-header { margin-bottom: 30px; margin-top: 25px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .header-logo { cursor: pointer; padding: 10px; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s; }
+        .app-header { margin-bottom: 30px; margin-top: 25px; display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%; }
+        .header-logo { cursor: pointer; padding: 10px; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s; max-width: 100%; }
         .header-logo:active { transform: scale(0.95); opacity: 0.8; }
-        .header-logo .line { display: block; line-height: 0.8; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        .header-logo .line { display: block; line-height: 0.8; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); text-align: center; }
         .header-logo .l1 { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 2px; }
         .header-logo .l2 { font-size: 2.2rem; letter-spacing: 0px; }
         .header-logo .l3 { font-size: 2.8rem; letter-spacing: 3px; margin-top: -3px; }
@@ -116,12 +124,12 @@
             background: linear-gradient(180deg, rgba(30,0,0,0.6) 0%, rgba(10,0,0,0.8) 100%);
             border: 1px solid var(--card-border); box-shadow: 0 0 30px rgba(255, 0, 0, 0.05); backdrop-filter: blur(5px); text-align: center;
         }
-        .countdown-timer { font-family: 'Benguiat ITC', serif; font-size: 32px; font-weight: 700; color: #fff; letter-spacing: 2px; margin: 10px 0; text-shadow: 0 0 15px var(--stranger-red); font-variant-numeric: tabular-nums; }
+        .countdown-timer { font-family: 'Benguiat ITC', serif; font-size: 32px; font-weight: 700; color: #fff; letter-spacing: 2px; margin: 10px 0; text-shadow: 0 0 15px var(--stranger-red); font-variant-numeric: tabular-nums; line-height: 1.2; }
         .banner-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--stranger-red); font-weight: 700; opacity: 0.9; }
         .countdown-subtext { font-size: 12px; color: var(--text-gray); margin-top: 8px; font-weight: 500; }
 
         .section-title { font-family: 'Benguiat ITC', serif; font-size: 24px; color: #fff; margin-bottom: 15px; margin-top: 30px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); border-left: 3px solid var(--stranger-red); padding-left: 12px; letter-spacing: 0.5px; }
-        .dates-grid { display: flex; flex-direction: column; gap: 14px; }
+        .dates-grid { display: flex; flex-direction: column; gap: 14px; width: 100%; }
         
         .date-card {
             background: var(--card-glass); border-radius: 14px; padding: 15px 18px; display: flex; justify-content: space-between; align-items: center;
@@ -131,12 +139,12 @@
         .date-card:active { transform: scale(0.98); background: rgba(50,50,50,0.8); }
         .date-info h3 { margin: 0 0 4px 0; font-size: 17px; color: white; font-family: 'Benguiat ITC', serif; letter-spacing: 0.5px; }
         .date-info p { margin: 0; font-size: 13px; color: var(--text-gray); }
-        .date-badge-box { background: #181818; width: 52px; height: 52px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid #333; }
+        .date-badge-box { background: #181818; width: 52px; height: 52px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid #333; flex-shrink: 0; }
         .db-day { font-size: 19px; font-weight: 900; color: white; line-height: 1; }
         .db-month { font-size: 9px; font-weight: 800; color: var(--stranger-red); text-transform: uppercase; margin-top: 2px; }
         .available-text { font-weight: 900; font-size: 10px; color: #00ff44; text-shadow: 0 0 8px rgba(0, 255, 68, 0.4); letter-spacing: 1px; text-transform: uppercase; border: 1px solid #005511; padding: 4px 6px; border-radius: 4px; background: rgba(0,255,68,0.1); }
 
-        .player-section { padding: 5px 0; }
+        .player-section { padding: 5px 0; width: 100%; }
         .player-wrapper { position: relative; width: 100%; background-color: #000; border-radius: 14px; overflow: hidden; aspect-ratio: 16 / 9; box-shadow: 0 10px 30px rgba(0,0,0,0.6); background-size: cover; background-position: center; cursor: pointer; border: 1px solid #333; }
         .play-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: rgba(200, 20, 20, 0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; color: white; border: 2px solid white; box-shadow: 0 0 20px rgba(255, 9, 9, 0.5); transition: transform 0.2s; }
         .play-overlay::after { content: '▶'; margin-left: 4px; }
@@ -151,7 +159,7 @@
             background: var(--card-glass); border: 1px solid var(--card-border);
             border-radius: 16px; padding: 25px 20px; margin-bottom: 20px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); width: 100%;
         }
         .other-icon-box {
             width: 60px; height: 60px; border-radius: 50%;
@@ -197,7 +205,7 @@
         .ep-header h2 { margin: 5px 0 0; font-size: 28px; color: white; font-family: 'Benguiat ITC', serif; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,0,0.3); }
         .ep-header span { font-size: 11px; color: var(--stranger-red); text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
         
-        .episode-list { display: flex; flex-direction: column; gap: 15px; }
+        .episode-list { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .episode-card { 
             display: flex; align-items: center; gap: 15px; 
             background: var(--card-glass); padding: 14px; border-radius: 14px; 
@@ -337,6 +345,7 @@
 
         <div class="countdown-banner">
             <div class="banner-content">
+                <!-- Текст изменен на "До выхода..." -->
                 <div class="banner-label" id="timer-label">ДО ВЫХОДА ФИНАЛЬНОЙ СЕРИИ</div>
                 <div class="countdown-timer" id="timer">00 : 00 : 00 : 00</div>
                 <div class="countdown-subtext" id="release-date-text">31 декабря 2025 • 17:00 (PT)</div>
