@@ -45,7 +45,7 @@
             z-index: 1000; background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 0.6;
         }
 
-        /* --- FIXED SPLASH SCREEN (HUGE SIZE) --- */
+        /* --- SPLASH SCREEN --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #1a0000 0%, #000000 100%);
@@ -53,48 +53,30 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             overflow: hidden;
         }
-
         .intro-container {
             display: flex; flex-direction: column; align-items: center;
-            /* Анимация увеличения: начинается с 0.8 и улетает в 20 (очень крупно) */
             animation: introZoom 3.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
             transform-origin: center center;
         }
-
         .splash-text {
-            font-family: 'Benguiat ITC', serif;
-            font-weight: 900;
-            color: transparent;
-            -webkit-text-stroke: 2px var(--stranger-red); /* Жирная обводка */
-            text-transform: uppercase;
-            text-align: center;
-            filter: drop-shadow(0 0 10px var(--stranger-red));
-            line-height: 0.85;
-            opacity: 0; /* Сначала невидимы */
+            font-family: 'Benguiat ITC', serif; font-weight: 900; color: transparent;
+            -webkit-text-stroke: 2px var(--stranger-red); text-transform: uppercase;
+            text-align: center; filter: drop-shadow(0 0 10px var(--stranger-red));
+            line-height: 0.85; opacity: 0;
         }
-
-        /* Размеры шрифтов для заставки */
         .sp-1 { font-size: 3rem; letter-spacing: 6px; margin-bottom: 5px; animation: fadeInText 1s ease forwards 0.2s; }
         .sp-2 { font-size: 4.5rem; letter-spacing: 0px; margin: 5px 0; animation: fadeInText 1s ease forwards 0.8s; }
         .sp-3 { font-size: 5.5rem; letter-spacing: 8px; margin-top: 5px; animation: fadeInText 1s ease forwards 1.4s; }
-
         .bar {
             width: 0%; height: 4px; background-color: var(--stranger-red);
             box-shadow: 0 0 20px var(--stranger-red); margin: 30px 0;
             animation: expandBar 2.5s ease-out forwards 0.5s;
         }
-
-        @keyframes introZoom {
-            0% { transform: scale(0.8); }
-            20% { transform: scale(1); }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(30); opacity: 0; pointer-events: none; } /* Улетаем в экран */
-        }
+        @keyframes introZoom { 0% { transform: scale(0.8); } 20% { transform: scale(1); } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(30); opacity: 0; pointer-events: none; } }
         @keyframes fadeInText { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes expandBar { 0% { width: 0%; opacity: 0; } 40% { width: 70%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
 
-
-        /* --- MAIN APP FONTS --- */
+        /* --- FONTS --- */
         .stranger-font {
             font-family: 'Benguiat ITC', serif; font-weight: 700; color: transparent;
             -webkit-text-stroke: 1.2px var(--stranger-red); text-transform: uppercase;
@@ -124,7 +106,7 @@
         .page-container { display: none; padding: 10px 16px 20px 16px; margin: 0 auto; width: 100%; opacity: 0; transition: opacity 0.2s; }
         .page-container.active-page { display: block; opacity: 1; }
 
-        /* COMPONENTS */
+        /* COUNTDOWN */
         .countdown-banner {
             width: 100%; border-radius: 16px; padding: 25px 20px; margin-bottom: 30px; 
             background: linear-gradient(180deg, rgba(30,0,0,0.6) 0%, rgba(10,0,0,0.8) 100%);
@@ -134,6 +116,7 @@
         .banner-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--stranger-red); font-weight: 700; }
         .countdown-subtext { font-size: 12px; color: var(--text-gray); margin-top: 8px; font-weight: 500; }
 
+        /* SELECTOR */
         .season-selector {
             display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px;
             margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scrollbar-width: none;
@@ -148,6 +131,7 @@
             box-shadow: 0 0 15px rgba(255, 9, 9, 0.3);
         }
 
+        /* CARDS */
         .dates-grid { display: flex; flex-direction: column; gap: 14px; width: 100%; }
         
         .episode-card, .date-card {
@@ -255,7 +239,7 @@
         </div>
     </div>
 
-    <!-- SUB MODAL (ВОЗВРАЩЕНО) -->
+    <!-- SUB MODAL -->
     <div id="sub-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-title">ДОСТУП ОГРАНИЧЕН</div>
@@ -266,7 +250,7 @@
         </div>
     </div>
 
-    <!-- SPLASH SCREEN (HUGE TEXT) -->
+    <!-- SPLASH SCREEN -->
     <div id="splash-screen">
         <div class="bar"></div>
         <div class="intro-container">
@@ -377,8 +361,9 @@
             ]
         };
 
-        // --- RUTUBE LINKS (Заглушки для примера) ---
-        // Замени ID в конце ссылки на актуальные, если они перестанут работать.
+        // --- LINKS DATABASE ---
+        // S1-4 = Rutube (заглушки для примера)
+        // S5E8 = PixelDrain (из твоего запроса)
         const defaultRutube = "https://rutube.ru/play/embed/84990d1f11a41604a1b023910c270395"; 
         
         const linksDB = {
@@ -386,7 +371,10 @@
             s2: { 1: defaultRutube, 2: defaultRutube, 3: defaultRutube, 4: defaultRutube, 5: defaultRutube, 6: defaultRutube, 7: defaultRutube, 8: defaultRutube, 9: defaultRutube },
             s3: { 1: defaultRutube, 2: defaultRutube, 3: defaultRutube, 4: defaultRutube, 5: defaultRutube, 6: defaultRutube, 7: defaultRutube, 8: defaultRutube },
             s4: { 1: defaultRutube, 2: defaultRutube, 3: defaultRutube, 4: defaultRutube, 5: defaultRutube, 6: defaultRutube, 7: defaultRutube, 8: defaultRutube, 9: defaultRutube },
-            s5: { 1: defaultRutube, 2: defaultRutube, 3: defaultRutube, 4: defaultRutube, 5: defaultRutube, 6: defaultRutube, 7: defaultRutube, 8: "" }
+            s5: { 
+                1: defaultRutube, 2: defaultRutube, 3: defaultRutube, 4: defaultRutube, 5: defaultRutube, 6: defaultRutube, 7: defaultRutube, 
+                8: "https://pixeldrain.com/u/6vHmCZCD" // Твоя ссылка
+            }
         };
 
         const allSeasonsData = {
@@ -396,12 +384,14 @@
             4: [ {id:1, name:"Глава 1: Клуб Адского Пламени"}, {id:2, name:"Глава 2: Проклятие Векны"}, {id:3, name:"Глава 3: Монстр и супергерой"}, {id:4, name:"Глава 4: Дорогой Билли"}, {id:5, name:"Глава 5: Проект «Нина»"}, {id:6, name:"Глава 6: Погружение"}, {id:7, name:"Глава 7: Резня в лаборатории"}, {id:8, name:"Глава 8: Папа"}, {id:9, name:"Глава 9: Проникновение"} ]
         };
 
-        const targetDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); 
+        // --- ДАТА ВЫХОДА = СЕЙЧАС (Чтобы было "ДОСТУПНО") ---
+        const targetDate = new Date(new Date().getTime() - 1000); 
 
         const s5Parts = [
             { id: 'p1', title: "Часть 1 (4 серии)", desc: "Начало конца", date: new Date(2025,10,26), eps: [ {id:1,name:"Глава 1: Ползание"}, {id:2,name:"Глава 2: Исчезновение"}, {id:3,name:"Глава 3: Ловушка"}, {id:4,name:"Глава 4: Колдун"} ] },
             { id: 'p2', title: "Часть 2 (3 серии)", desc: "Битва за Хоукинс", date: new Date(2025,11,25), eps: [ {id:5,name:"Глава 5: Шоковая терапия"}, {id:6,name:"Глава 6: Побег из Камазотц"}, {id:7,name:"Глава 7: Мост"} ] },
-            { id: 'p3', title: "Часть 3 (1 серия)", desc: "Финал истории", date: targetDate, eps: [ {id:8,name:"Глава 8: Правая сторона", releaseDate: targetDate} ] }
+            // Здесь дату тоже ставим в прошлое
+            { id: 'p3', title: "Часть 3 (1 серия)", desc: "Финал истории", date: targetDate, eps: [ {id:8,name:"Глава 8: Правая сторона"} ] }
         ];
 
         // --- INIT ---
@@ -411,7 +401,7 @@
             renderSeason(5); 
             document.getElementById('release-date-text').innerText = targetDate.toLocaleDateString() + " (Ваше время)";
             checkNotifState(); applyConfig();
-        }, 3800);
+        }, 3000);
 
         function renderSeason(num) {
             vibration();
@@ -483,10 +473,10 @@
         let userHasClickedSub = false;
 
         function openCinema(globalId, title, subtitle) {
-            // 1. Проверка подписки (ВЕРНУЛ)
+            // 1. Проверка подписки
             if (!checkSubRequirement(globalId, title, subtitle)) return;
 
-            // 2. Получение ссылки Rutube
+            // 2. Получение ссылки
             const regex = /s(\d+)e(\d+)/; const m = globalId.match(regex);
             const s = `s${m[1]}`; const e = m[2];
             const link = linksDB[s] && linksDB[s][e];
@@ -495,10 +485,16 @@
             vibration();
 
             document.getElementById('cinema-title').innerText = title;
-            // document.getElementById('cinema-sub').innerText = subtitle;
             
-            // Загрузка в Rutube Iframe
-            document.getElementById('cinema-iframe').src = link;
+            // 3. ОБРАБОТКА PIXELDRAIN (Для S5E8)
+            let finalSrc = link;
+            if (link.includes("pixeldrain")) {
+                let id = link.split('/').pop();
+                if(id.includes('?')) id = id.split('?')[0];
+                finalSrc = `https://pixeldrain.com/u/${id}?embed`;
+            }
+
+            document.getElementById('cinema-iframe').src = finalSrc;
             document.getElementById('cinema-mode').style.display = 'flex';
         }
 
@@ -545,15 +541,11 @@
                 document.getElementById('other-page').style.display = 'none';
                 setTimeout(()=>document.getElementById('main-app').classList.add('active-page'),10);
                 document.getElementById('other-page').classList.remove('active-page');
-                document.getElementById('tab-home').classList.add('active');
-                document.getElementById('tab-other').classList.remove('active');
             } else {
                 document.getElementById('main-app').style.display = 'none';
                 document.getElementById('other-page').style.display = 'block';
                 setTimeout(()=>document.getElementById('other-page').classList.add('active-page'),10);
                 document.getElementById('main-app').classList.remove('active-page');
-                document.getElementById('tab-other').classList.add('active');
-                document.getElementById('tab-home').classList.remove('active');
             }
         }
         
